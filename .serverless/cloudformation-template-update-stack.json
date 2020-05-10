@@ -59,7 +59,7 @@
     "JobLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/js-scraper-beta-job"
+        "LogGroupName": "/aws/lambda/cmm-put-dev2-job"
       }
     },
     "IamRoleLambdaExecution": {
@@ -87,7 +87,7 @@
               "Fn::Join": [
                 "-",
                 [
-                  "js-scraper-beta",
+                  "cmm-put-dev2",
                   "lambda"
                 ]
               ]
@@ -103,7 +103,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/js-scraper-beta*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cmm-put-dev2*:*"
                     }
                   ]
                 },
@@ -114,7 +114,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/js-scraper-beta*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cmm-put-dev2*:*:*"
                     }
                   ]
                 }
@@ -127,7 +127,7 @@
           "Fn::Join": [
             "-",
             [
-              "js-scraper-beta",
+              "cmm-put-dev2",
               {
                 "Ref": "AWS::Region"
               },
@@ -144,10 +144,10 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/js-scraper/beta/1588859399806-2020-05-07T13:49:59.806Z/package.zip"
+          "S3Key": "serverless/cmm-put/dev2/1589119459525-2020-05-10T14:04:19.525Z/package.zip"
         },
-        "FunctionName": "js-scraper-beta-job",
-        "Handler": "handler.scrape",
+        "FunctionName": "cmm-put-dev2-job",
+        "Handler": "handler.lambda_handler",
         "MemorySize": 1024,
         "Role": {
           "Fn::GetAtt": [
@@ -160,11 +160,10 @@
         "Tags": [
           {
             "Key": "project",
-            "Value": "job_search"
+            "Value": "cmm"
           }
         ],
         "Layers": [
-          "arn:aws:lambda:eu-west-1:139228650326:layer:aws-b4-layer:1",
           "arn:aws:lambda:eu-west-1:139228650326:layer:aws-requests-layer:2"
         ]
       },
@@ -173,15 +172,157 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "JobLambdaVersionLco3VTUarAuSTDJBCPsMxsO2EN6kJaSaDWVrjgTeSIQ": {
+    "JobLambdaVersionOY2OqLHTaQ4CEUV3z3wPwKHApkEUDAyjQ3DfchUjY": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "JobLambdaFunction"
         },
-        "CodeSha256": "aarIhbEyT0zACdN+CYdm2DqKWCyAC+PDhBnLjw/0Wek="
+        "CodeSha256": "1CTDRI8BGkprsg5PbQdFNHCKuwVVbIvvRT2QORbVNcs="
       }
+    },
+    "JobCustomS31": {
+      "Type": "Custom::S3",
+      "Version": 1,
+      "DependsOn": [
+        "JobLambdaFunction",
+        "CustomDashresourceDashexistingDashs3LambdaFunction"
+      ],
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomDashresourceDashexistingDashs3LambdaFunction",
+            "Arn"
+          ]
+        },
+        "FunctionName": "cmm-put-dev2-job",
+        "BucketName": "cmm-filtered",
+        "BucketConfigs": [
+          {
+            "Event": "s3:ObjectCreated:*",
+            "Rules": [
+              {
+                "Suffix": ".ACTL"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "IamRoleCustomResourcesLambdaExecution": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": {
+              "Fn::Join": [
+                "-",
+                [
+                  "dev2",
+                  "cmm-put",
+                  "custom-resources-lambda"
+                ]
+              ]
+            },
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      ":",
+                      [
+                        "arn",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        "s3",
+                        "",
+                        "",
+                        "cmm-filtered"
+                      ]
+                    ]
+                  },
+                  "Action": [
+                    "s3:PutBucketNotification",
+                    "s3:GetBucketNotification"
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Resource": {
+                    "Fn::Join": [
+                      ":",
+                      [
+                        "arn",
+                        {
+                          "Ref": "AWS::Partition"
+                        },
+                        "lambda",
+                        {
+                          "Ref": "AWS::Region"
+                        },
+                        {
+                          "Ref": "AWS::AccountId"
+                        },
+                        "function",
+                        "cmm-put-dev2-job"
+                      ]
+                    ]
+                  },
+                  "Action": [
+                    "lambda:AddPermission",
+                    "lambda:RemovePermission"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "CustomDashresourceDashexistingDashs3LambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/cmm-put/dev2/1589119459525-2020-05-10T14:04:19.525Z/custom-resources.zip"
+        },
+        "FunctionName": "cmm-put-dev2-custom-resource-existing-s3",
+        "Handler": "s3/handler.handler",
+        "MemorySize": 1024,
+        "Runtime": "nodejs12.x",
+        "Timeout": 180,
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleCustomResourcesLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "IamRoleCustomResourcesLambdaExecution"
+      ]
     }
   },
   "Outputs": {
@@ -193,7 +334,7 @@
     "JobLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "JobLambdaVersionLco3VTUarAuSTDJBCPsMxsO2EN6kJaSaDWVrjgTeSIQ"
+        "Ref": "JobLambdaVersionOY2OqLHTaQ4CEUV3z3wPwKHApkEUDAyjQ3DfchUjY"
       }
     }
   }

@@ -19,7 +19,7 @@ pip3 install requests -t .
 Update application details in `serverless.yml`
 Zip all files
 ```
-zip -r package.zip *
+zip -r package.zip handler.py
 ```
 Deploy to AWS:
 ```

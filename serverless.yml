@@ -2,7 +2,7 @@ service: cmm-put
 
 provider:
   name: aws
-  stage: beta
+  stage: dev2
   runtime: python3.8
   region: eu-west-1
   timeout: 40
@@ -12,7 +12,7 @@ package:
 
 functions:
   job:
-    handler: handler.scrape
+    handler: handler.lambda_handler
     events:
       - s3:
           bucket: cmm-filtered

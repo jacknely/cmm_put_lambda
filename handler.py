@@ -37,8 +37,9 @@ def get_event_details(event) -> tuple:
     :return bucket str
     :return key str
     """
-    bucket = record["s3"]["bucket"]["name"]
-    key = record["s3"]["object"]["key"]
+    record = event['Records'][0]["s3"]
+    bucket = record["bucket"]["name"]
+    key = record["object"]["key"]
 
     return bucket, key
 

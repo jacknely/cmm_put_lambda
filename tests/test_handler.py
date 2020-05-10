@@ -21,6 +21,10 @@ class TestHandler:
 
     @mock_s3
     def test_extract_file_data(self):
+        # moto doesnt want to work without below env vars
+        os.environ["AWS_ACCESS_KEY_ID"] = "foo"
+        os.environ["AWS_SECRET_ACCESS_KEY"] = "bar"
+        os.environ["AWS_DEFAULT_REGION"] = "eu-west-1"
         s3 = boto3.client('s3', region_name='eu-west-1')
         test_file = "data_sample.ACTL"
         test_bucket = "cmm-filtered"
