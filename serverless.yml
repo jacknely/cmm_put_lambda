@@ -1,0 +1,19 @@
+service: cmm_put
+
+provider:
+  name: aws
+  stage: beta
+  runtime: python3.8
+  region: eu-west-1
+  timeout: 40
+
+package:
+  artifact: package.zip
+
+functions:
+  job:
+    handler: handler.scrape
+    layers:
+      - arn:aws:lambda:eu-west-1:139228650326:layer:aws-requests-layer:2
+    tags:
+      project: cmm

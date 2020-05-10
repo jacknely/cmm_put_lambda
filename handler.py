@@ -10,12 +10,14 @@ dynamodb = boto3.client("dynamodb")
 table_name = "cmm.results"
 
 
-def insert_into_db(point_data, overwrite=False):
+def insert_into_db(point_data, overwrite=False: bool) -> None:
     """
     inserts jobs to aws dynamodb
+    :params set to True to overwrite values in DB
+    if key exists
     """
     condition = f"attribute_not_exists(id)"
-    for point in point_data[:12]:
+    for point in point_data[:5]:
         try:
             if overwrite:
                 condition = f"attribute_not_exists(f.id)"
@@ -25,9 +27,9 @@ def insert_into_db(point_data, overwrite=False):
             )
         except ClientError as error:
             print(f"Unexpected error: {error}")
+    print(f"SUCCESS: Data inserted to {table_name}")
 
-
-def get_event_details(event):
+def get_event_details(event) -> tuple:
     """
     extract infomation from trigger
     event
@@ -55,7 +57,11 @@ def extract_file_data(obj):
     return raw_data
 
 
-def parse_data(raw_data):
+def parse_data(raw_data: list) -> list:
+    """
+    returns a list of dicts for each point
+    with data to be moved into db
+    """
     points = []
     for index, item in enumerate(raw_data[32], start=3):
         if index >= len(raw_data[32]):
@@ -67,6 +73,10 @@ def parse_data(raw_data):
 
 
 def make_db_schema(raw_data, index):
+    """
+    parsing schema for .ACTL files
+    which are output from CMM
+    """
     point_data = {
         "id": {"S": raw_data[32][index] + "_"
          + raw_data[33][1]},
@@ -96,8 +106,14 @@ def make_db_schema(raw_data, index):
 
 
 def lambda_handler(event, context):
-
+    """
+    event handlered triggered by S3 put
+    """
     bucket, key = get_event_details(event)
+    obj = s3.Object(bucket, key)
+    raw_data = extract_file_data(obj)
+    parsed_data = parse_data(raw_data)
+    insert_into_db(parsed_data, overwrite=True)
 
     return {"statusCode": 200, "body": "Upload Complete"}
 
