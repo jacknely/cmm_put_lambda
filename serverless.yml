@@ -13,6 +13,12 @@ package:
 functions:
   job:
     handler: handler.scrape
+    events:
+      - s3:
+          bucket: cmm-filtered
+          event: s3:ObjectCreated:*
+          rules:
+            - suffix: .ACTL
     layers:
       - arn:aws:lambda:eu-west-1:139228650326:layer:aws-requests-layer:2
     tags:
