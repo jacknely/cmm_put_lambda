@@ -41,6 +41,10 @@ class TestHandler:
 
     @mock_dynamodb2
     def test_insert_into_db(self):
+        # moto doesnt want to work without below env vars
+        os.environ["AWS_ACCESS_KEY_ID"] = "foo"
+        os.environ["AWS_SECRET_ACCESS_KEY"] = "bar"
+        os.environ["AWS_DEFAULT_REGION"] = "eu-west-1"
         table_name = "cmm.results"
         dynamodb = boto3.resource("dynamodb", region_name="eu-west-1")
 
