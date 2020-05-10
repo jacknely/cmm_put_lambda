@@ -19,6 +19,7 @@ functions:
           event: s3:ObjectCreated:*
           rules:
             - suffix: .ACTL
+          existing: true
     layers:
       - arn:aws:lambda:eu-west-1:139228650326:layer:aws-requests-layer:2
     tags:

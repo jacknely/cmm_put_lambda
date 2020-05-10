@@ -6,7 +6,7 @@ from botocore.exceptions import ClientError
 import csv
 
 s3 = boto3.resource("s3")
-dynamodb = boto3.client("dynamodb")
+dynamodb = boto3.client("dynamodb", region_name="eu-west-1")
 table_name = "cmm.results"
 
 
