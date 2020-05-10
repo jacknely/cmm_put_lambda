@@ -13,26 +13,6 @@ from handler import insert_into_db, extract_file_data
 
 class TestHandler:
 
-    @mock_s3
-    def test_extract_file_data(self):
-        # moto doesnt want to work without below env vars
-        os.environ["AWS_ACCESS_KEY_ID"] = "foo"
-        os.environ["AWS_SECRET_ACCESS_KEY"] = "bar"
-        os.environ["AWS_DEFAULT_REGION"] = "eu-west-1"
-        s3 = boto3.client('s3', region_name='eu-west-1')
-        test_file = "data_sample.ACTL"
-        test_bucket = "cmm-filtered"
-        s3.create_bucket(Bucket=test_bucket)
-        test_path = Path(__file__).parent / f"test_data/{test_file}"
-        with open(test_path, "rb") as file:
-            s3.upload_fileobj(file, test_bucket, test_file)
-
-        s3 = boto3.resource("s3")
-        obj = s3.Object(test_bucket, test_file)
-        raw_data = extract_file_data(obj)
-
-        assert len(raw_data) == 34
-
     @mock_dynamodb2
     def test_insert_into_db(self):
         # moto doesnt want to work without below env vars
