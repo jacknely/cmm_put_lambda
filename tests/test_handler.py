@@ -13,12 +13,6 @@ from handler import insert_into_db, extract_file_data
 
 class TestHandler:
 
-    def setup_method(self):
-        # moto doesnt want to work without below env vars
-        os.environ["AWS_ACCESS_KEY_ID"] = "foo"
-        os.environ["AWS_SECRET_ACCESS_KEY"] = "bar"
-        os.environ["AWS_DEFAULT_REGION"] = "eu-west-1"
-
     @mock_s3
     def test_extract_file_data(self):
         # moto doesnt want to work without below env vars
