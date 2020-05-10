@@ -10,7 +10,7 @@ dynamodb = boto3.client("dynamodb")
 table_name = "cmm.results"
 
 
-def insert_into_db(point_data, overwrite=False: bool) -> None:
+def insert_into_db(point_data, overwrite: bool = False) -> None:
     """
     inserts jobs to aws dynamodb
     :params set to True to overwrite values in DB

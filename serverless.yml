@@ -1,4 +1,4 @@
-service: cmm_put
+service: cmm-put
 
 provider:
   name: aws
