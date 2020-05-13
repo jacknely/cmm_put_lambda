@@ -1,5 +1,5 @@
-![deploy-to--lambda](https://github.com/jacknely/cmm_put_lambda/workflows/deploy-aws-lambda/badge.svg)
-![Python application](https://github.com/jacknely/cmm_put_lambda/workflows/Python%20application/badge.svg)
+![deploy lambda](https://github.com/jacknely/cmm_put_lambda/workflows/deploy-aws-lambda/badge.svg)
+![Python app](https://github.com/jacknely/cmm_put_lambda/workflows/Python%20application/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 # :office: CMM Put: AWS Lambda Function

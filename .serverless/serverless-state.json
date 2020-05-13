@@ -10,7 +10,8 @@
       "name": "aws",
       "runtime": "python3.8",
       "region": "eu-west-1",
-      "timeout": 40,
+      "timeout": 10,
+      "role": "arn:aws:iam::139228650326:role/cwjobs-scraper-dev-eu-west-1-lambdaRole",
       "versionFunctions": true,
       "remoteFunctionData": null,
       "compiledCloudFormationTemplate": {
@@ -77,81 +78,6 @@
               "LogGroupName": "/aws/lambda/cmm-put-dev2-job"
             }
           },
-          "IamRoleLambdaExecution": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-              "AssumeRolePolicyDocument": {
-                "Version": "2012-10-17",
-                "Statement": [
-                  {
-                    "Effect": "Allow",
-                    "Principal": {
-                      "Service": [
-                        "lambda.amazonaws.com"
-                      ]
-                    },
-                    "Action": [
-                      "sts:AssumeRole"
-                    ]
-                  }
-                ]
-              },
-              "Policies": [
-                {
-                  "PolicyName": {
-                    "Fn::Join": [
-                      "-",
-                      [
-                        "cmm-put-dev2",
-                        "lambda"
-                      ]
-                    ]
-                  },
-                  "PolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                      {
-                        "Effect": "Allow",
-                        "Action": [
-                          "logs:CreateLogStream",
-                          "logs:CreateLogGroup"
-                        ],
-                        "Resource": [
-                          {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cmm-put-dev2*:*"
-                          }
-                        ]
-                      },
-                      {
-                        "Effect": "Allow",
-                        "Action": [
-                          "logs:PutLogEvents"
-                        ],
-                        "Resource": [
-                          {
-                            "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/cmm-put-dev2*:*:*"
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                }
-              ],
-              "Path": "/",
-              "RoleName": {
-                "Fn::Join": [
-                  "-",
-                  [
-                    "cmm-put-dev2",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    "lambdaRole"
-                  ]
-                ]
-              }
-            }
-          },
           "JobLambdaFunction": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
@@ -159,42 +85,33 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/cmm-put/dev2/1589119459525-2020-05-10T14:04:19.525Z/package.zip"
+                "S3Key": "serverless/cmm-put/dev2/1589122668252-2020-05-10T14:57:48.252Z/package.zip"
               },
               "FunctionName": "cmm-put-dev2-job",
               "Handler": "handler.lambda_handler",
               "MemorySize": 1024,
-              "Role": {
-                "Fn::GetAtt": [
-                  "IamRoleLambdaExecution",
-                  "Arn"
-                ]
-              },
+              "Role": "arn:aws:iam::139228650326:role/cwjobs-scraper-dev-eu-west-1-lambdaRole",
               "Runtime": "python3.8",
-              "Timeout": 40,
+              "Timeout": 10,
               "Tags": [
                 {
                   "Key": "project",
                   "Value": "cmm"
                 }
-              ],
-              "Layers": [
-                "arn:aws:lambda:eu-west-1:139228650326:layer:aws-requests-layer:2"
               ]
             },
             "DependsOn": [
-              "JobLogGroup",
-              "IamRoleLambdaExecution"
+              "JobLogGroup"
             ]
           },
-          "JobLambdaVersionOY2OqLHTaQ4CEUV3z3wPwKHApkEUDAyjQ3DfchUjY": {
+          "JobLambdaVersionubjJAXsi2tbM77PdnHKLkHuKxHO6NS31PEew23za5Yw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "JobLambdaFunction"
               },
-              "CodeSha256": "1CTDRI8BGkprsg5PbQdFNHCKuwVVbIvvRT2QORbVNcs="
+              "CodeSha256": "e4qwEA43Z8q2blXe3xLcMFEFf0olMELUdccl4Cbp8qA="
             }
           },
           "JobCustomS31": {
@@ -321,7 +238,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/cmm-put/dev2/1589119459525-2020-05-10T14:04:19.525Z/custom-resources.zip"
+                "S3Key": "serverless/cmm-put/dev2/1589122668252-2020-05-10T14:57:48.252Z/custom-resources.zip"
               },
               "FunctionName": "cmm-put-dev2-custom-resource-existing-s3",
               "Handler": "s3/handler.handler",
@@ -349,7 +266,7 @@
           "JobLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "JobLambdaVersionOY2OqLHTaQ4CEUV3z3wPwKHApkEUDAyjQ3DfchUjY"
+              "Ref": "JobLambdaVersionubjJAXsi2tbM77PdnHKLkHuKxHO6NS31PEew23za5Yw"
             }
           }
         }
@@ -441,19 +358,16 @@
             }
           }
         ],
-        "layers": {
-          "$ref": "$[\"service\"][\"provider\"][\"compiledCloudFormationTemplate\"][\"Resources\"][\"JobLambdaFunction\"][\"Properties\"][\"Layers\"]"
-        },
         "tags": {
           "project": "cmm"
         },
         "name": "cmm-put-dev2-job",
         "package": {},
         "memory": 1024,
-        "timeout": 40,
+        "timeout": 10,
         "runtime": "python3.8",
         "vpc": {},
-        "versionLogicalId": "JobLambdaVersionOY2OqLHTaQ4CEUV3z3wPwKHApkEUDAyjQ3DfchUjY"
+        "versionLogicalId": "JobLambdaVersionubjJAXsi2tbM77PdnHKLkHuKxHO6NS31PEew23za5Yw"
       }
     },
     "serviceFilename": "serverless.yml",
@@ -461,7 +375,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/cmm-put/dev2/1589119459525-2020-05-10T14:04:19.525Z",
+    "artifactDirectoryName": "serverless/cmm-put/dev2/1589122668252-2020-05-10T14:57:48.252Z",
     "artifact": "package.zip"
   }
 }

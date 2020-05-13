@@ -5,7 +5,8 @@ provider:
   stage: dev2
   runtime: python3.8
   region: eu-west-1
-  timeout: 40
+  timeout: 10
+  role: arn:aws:iam::139228650326:role/cwjobs-scraper-dev-eu-west-1-lambdaRole
 
 package:
   artifact: package.zip
