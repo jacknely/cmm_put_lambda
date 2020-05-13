@@ -80,7 +80,7 @@ def make_db_schema(raw_data, index):
     """
     point_data = {
         "id": {"S": raw_data[32][index] + "-"
-         + raw_data[1][1] - raw_data[33][1]},
+         + raw_data[1][1] + "-" + raw_data[33][1]},
         "point": {"S": raw_data[32][index]},
         "program_id": {"S": raw_data[1][1]},
         "part_number": {"S": raw_data[3][1] or "null"},
@@ -121,7 +121,7 @@ def lambda_handler(event, context):
 
 if __name__ == "__main__":
     bucket = "cmm-filtered"
-    key = "ACCUM_008.RES.ACTL"
+    key = "ACC__74__LH.RES.ACTL"
     obj = s3.Object(bucket, key)
     raw_data = extract_file_data(obj)
     parsed_data = parse_data(raw_data)
