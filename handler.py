@@ -80,7 +80,7 @@ def make_db_schema(raw_data, index):
     """
     point_data = {
         "id": {"S": raw_data[32][index] + "-"
-         + raw_data[1][1]},
+         + raw_data[1][1] - raw_data[33][1]},
         "point": {"S": raw_data[32][index]},
         "program_id": {"S": raw_data[1][1]},
         "part_number": {"S": raw_data[3][1] or "null"},
